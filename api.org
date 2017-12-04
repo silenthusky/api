@@ -1,0 +1,76 @@
+* API Design
+
+** Group
+
+*** List All Posts by Date
+按照天，星期，月份返回帖子总数以及帖子的 id
+
+#+BEGIN_SRC python
+GET /groups/{group_id}/posts
+#+END_SRC
+
+**** Parameters
+| Name     | Type   | Description                                     |
+|----------+--------+-------------------------------------------------|
+| group_id | String | group id                                        |
+| range    | String | 可选。默认为 day，可选的参数有 day，week，month |
+|----------+--------+-------------------------------------------------|
+
+**** Response
+#+BEGIN_SRC json
+Status: 200 OK
+-------
+[
+    "group_name": "hello",
+    "group_id": "xxxxxx",
+    "published_at": "2015-08-05T08:40:51.620Z",
+    "post_num": 123,
+    "posts": [
+        {
+            "post_id": "1241414",
+            "user_id": "xxxxx"
+        },
+        {
+            "post_id": "1231414",
+            "user_id": "xxxxx"
+        }
+    ]
+]
+#+END_SRC
+
+** Users
+
+*** 获得用户数
+
+根据日期和是否拥有设备，返回用户总数
+#+BEGIN_SRC python
+GET /users/count
+#+END_SRC
+
+**** Parameters
+| Name        | Type   | Description                                                         |
+|-------------+--------+---------------------------------------------------------------------|
+| datetime    | String | 可选。默认为当前日期。查询该日期前的所有用户数                      |
+| has_devices | bool   | 可选。默认 False，返回所有用户。如果为 True，返回拥有设备的所有用户 |
+| has_orders  | bool   | 可选。默认 False，返回所有用户。True，返回拥有订单的用户数           |
+|-------------+--------+---------------------------------------------------------------------|
+
+**** Response
+#+BEGIN_SRC json
+Status: 200 OK
+-----
+{
+    datetime: "2015-08-05T08:40:51.620Z",
+    users_count：123111441
+}
+#+END_SRC
+
+
+** Orders
+
+*** 订单查询
+按照已成交、已确认、无效或已取消、未确认对订单进行查询
+
+#+BEGIN_SRC python
+
+#+END_SRC
