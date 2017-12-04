@@ -38,6 +38,41 @@ Status: 200 OK
 ]
 #+END_SRC
 
+*** 对每日、每周、每月各圈子发帖量进行排序
+#+BEGIN_SRC python
+GET /groups/posts
+#+END_SRC
+
+**** Parameters
+| Name      | Type   | Description                                      |
+|-----------+--------+--------------------------------------------------|
+| range     | String | 可选。默认为 day，可选的参数有 day，week，month  |
+|-----------+--------+--------------------------------------------------|
+
+**** Response
+#+BEGIN_SRC json
+Status: 200 OK
+-----
+{
+    "groups_count": 111,
+    "groups_list": [
+        {
+            "group_id": "1111",
+            "group_name": "",
+            "posts_count": 111,
+        },
+        {
+            "group_id": "2222",
+            "group_name": "",
+            "posts_count": 100,
+        },
+        ...
+    ],
+
+}
+#+END_SRC
+
+
 ** Users
 
 *** 获得用户数
@@ -110,17 +145,18 @@ Status: 200 OK
 }
 #+END_SRC
 
-*** 关键词统计
+** 关键词统计
     返回关键词统计结果。
     按照日、周、年返回高频查询数据。
 
     #+BEGIN_SRC python
-    GET /keywords/
+    GET /keywords/{type}
     #+END_SRC
 
 **** Parameters
 | Name      | Type   | Description                                      |
 |-----------+--------+--------------------------------------------------|
+| type      | String | 必选。可选值为 store,group                        |
 | range     | String | 可选。默认为 day，可选的参数有 day，week，month  |
 | sort_type | String | 可选。默认为降序排列。可选类型为 descend, ascend |
 | limit     | int    | 可选。默认返回前 100 条数据。                    |
@@ -139,13 +175,88 @@ Status: 200 OK
     "keywords_list" : [
         {
             "keyword": "健身",
-            "frequency": 20
+            "frequency": 20,
+            "type": "group",
         },
         {
             "keyword": "电子秤",
-            "frequency": 10
+            "frequency": 10,
+            "type": "store"
         },
         ....
     ]
+}
+#+END_SRC
+
+
+** 商品统计
+*** 统计每个商品的销售量、访问量，以及进行排序。
+
+    #+BEGIN_SRC python
+    GET /goods/
+    #+END_SRC
+
+**** Parameters
+| Name      | Type | Description                                   |
+|-----------+------+-----------------------------------------------|
+| sales     | bool | 默认返回所有商品，true 返回所有商品销售量     |
+| visited   | bool | 默认返回所有商品，true 返回所有访问量         |
+| is_sorted | bool | 默认 false，返回无序的。true 返回降序排序结果 |
+|-----------+------+-----------------------------------------------|
+
+**** Response
+
+#+BEGIN_SRC json
+Status: 200 OK
+-----
+{
+    "goods_count": 1231,
+    "goods_list" : [
+        {
+            "good_id": "12314124",
+            "sales": 20,
+            "visited": 100,
+        },
+        {
+            "good_id": "3124141",
+            "sales": 12,
+            "visited": 13,
+        },
+        ....
+    ]
+}
+#+END_SRC
+
+** 数据比率统计
+
+#+BEGIN_SRC python
+GET /statistics/ratio
+#+END_SRC
+
+**** Response
+
+#+BEGIN_SRC json
+Status: 200 OK
+-----
+{
+    "download_register_ratio": 0.69,
+    "orders_ratio": {
+        "deal_done": 0.4,
+        "comfirmed": 0.2,
+        "invalid": 0.1,
+        "cancelled": 0.1,
+        "uncomfirmed": 0.2
+    },
+    "payment": {
+        "alipay": 0.66,
+        "wechat": 0.34
+    },
+    "users": {
+        "has_ordered": 0.51,
+        "device_coverage": 0.22
+    },
+    "goods": {
+        "visit_buy_ratio": 0.21
+    }
 }
 #+END_SRC
